@@ -1,6 +1,5 @@
 from datetime import datetime
 
-import matplotlib.pyplot as plt
 from random import seed
 
 import numpy as np
