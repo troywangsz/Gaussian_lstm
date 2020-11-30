@@ -6,8 +6,8 @@ from torch.distributions import Gamma, Poisson
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-input_size = 7
-hidden_size = 16
+from settings import *
+
 
 
 class GaussianLstm(nn.Module):
@@ -15,17 +15,17 @@ class GaussianLstm(nn.Module):
     def __init__(self):
         super().__init__()
         self.cell = nn.LSTM(
-            input_size=input_size,
-            hidden_size=hidden_size,
+            input_size=INPUT_DIM,
+            hidden_size=HIDDEN_DIM,
             num_layers=3,
             batch_first=True
         )
         self.linear_m = nn.Linear(
-            in_features=hidden_size,
+            in_features=HIDDEN_DIM,
             out_features=1
         )
         self.linear_a = nn.Linear(
-            in_features=hidden_size,
+            in_features=HIDDEN_DIM,
             out_features=1
         )
 

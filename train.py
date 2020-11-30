@@ -12,6 +12,7 @@ from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from cropDataSet import *
 from model import *
+import settings
 
 
 def save_model(filename, model):
@@ -28,9 +29,10 @@ def RMSE(label, m):
 
 if __name__ == '__main__':
 
-    np.random.seed(int(time.time()))
-    torch.manual_seed(int(time.time()))
-    seed(int(time.time()))
+    rand_seed = int(time.time())
+    np.random.seed(rand_seed)
+    torch.manual_seed(rand_seed)
+    seed(rand_seed)
 
 
     data_all = pd.read_csv("data/1043_199_7_1_sug.csv")
@@ -44,24 +46,27 @@ if __name__ == '__main__':
 
     loader = DataLoader(
         dataset=dataset,
-        batch_size=5,
+        batch_size=settings.BATCH_SIZE,
         shuffle=True
     )
 
     model = GaussianLstm()
+    if settings.USE_CUDA:
+        model = model.cuda()
     model.train()
 
-    learning_rate = 0.0005
-    epochs = 100
     rmse_valid_low = 100
 
-    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+    optimizer = optim.Adam(model.parameters(), lr=settings.LEARNING_RATE)
     criterion = nn.MSELoss()
 
-    for epoch in range(epochs):
+    for epoch in range(settings.EPOCHS):
         for i, (sample, label) in enumerate(loader):
             sample = Variable(sample)
             label = Variable(label)
+            if settings.USE_CUDA:
+                sample = sample.cuda()
+                label = label.cuda()
 
             m, a = model(sample)
 
@@ -74,7 +79,7 @@ if __name__ == '__main__':
             rmse_valid = RMSE(label, m)
             if rmse_valid < rmse_valid_low:
                 rmse_valid_low = rmse_valid
-                save_model('models/{}-{}-{:.2f}'.format(epoch, i, rmse_valid), model)
+                save_model('models/{}-{}-{}-{:.5f}'.format(rand_seed, epoch, i, rmse_valid), model)
                 print('lowest rmse valid', rmse_valid)
             print('rmse valid', rmse_valid)
 
