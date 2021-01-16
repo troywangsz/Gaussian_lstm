@@ -14,6 +14,7 @@ def save_model(filename, model):
     torch.save(state, filename)
 
 def load_model(filename):
+    # return torch.load(filename,map_location="cpu")['model']
     return torch.load(filename)['model']
 
 

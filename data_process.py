@@ -52,13 +52,13 @@ for year in range(0, 8):
             RAIN_tmp = now_sheet.cell(row=row_index, column=7).value
             val_tmp1.append(RAIN_tmp)
 
-            # LAI_tmp = now_sheet.cell(row=row_index, column=8).value
-            # LAI_max = max(LAI_max, LAI_tmp)
-            # val_tmp2.append(LAI_tmp)
+            LAI_tmp = now_sheet.cell(row=row_index, column=8).value
+            LAI_max = max(LAI_max, LAI_tmp)
+            val_tmp2.append(LAI_tmp)
 
-            TAGP_tmp = now_sheet.cell(row=row_index, column=9).value
-            TAGP_max = max(TAGP_max, TAGP_tmp)
-            val_tmp2.append(TAGP_tmp)
+            # TAGP_tmp = now_sheet.cell(row=row_index, column=9).value
+            # TAGP_max = max(TAGP_max, TAGP_tmp)
+            # val_tmp2.append(TAGP_tmp)
             sample_tmp.append(val_tmp1)
             label_tmp.append(val_tmp2)
             row_index += 1
@@ -85,9 +85,9 @@ for batch in sample:
         seq[2] = (seq[2] - temp_min) / temp_normal
 for batch in label:
     for seq in batch:
-        # seq[0] = seq[0] / LAI_max
+        seq[0] = seq[0] / LAI_max
         # seq[1] = seq[1] / TAGP_max
-        seq[0] = seq[0]/TAGP_max
+        # seq[0] = seq[0]/TAGP_max
 
 # print(sample.shape)
 # print(label.shape)
@@ -101,10 +101,11 @@ print(label.shape)
 data_all = np.concatenate((sample,label),axis=1)
 print(data_all.shape)
 
-data_all = pd.DataFrame(data_all,columns=["LAI_real","Temp_min","Temp_max","Irrad","Vap","Wind","Rain","TAGP_pre"])
+# data_all = pd.DataFrame(data_all,columns=["LAI_real","Temp_min","Temp_max","Irrad","Vap","Wind","Rain","TAGP_pre"])
+data_all = pd.DataFrame(data_all,columns=["LAI_real","Temp_min","Temp_max","Irrad","Vap","Wind","Rain","LAI_pre"])
 
 
-data_all.to_csv("data/1043_199_7_1_sug.csv",index=False,na_rep=0.0)
+data_all.to_csv("data/1043_199_7_1_sug_LAI.csv",index=False,na_rep=0.0)
 
 
 
